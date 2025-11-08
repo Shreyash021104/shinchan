@@ -1,0 +1,64 @@
+LED BUZZER
+
+1)	Write an embedded C program  for interfacing button, LED, relay & buzzer as follows
+a)	When Switch 0 is pressed,  LED’s start chasing from left to right.
+b)	When Switch 1 is pressed, LED’s start chasing from right to left. 
+
+
+
+#include <p18f4550.h> 
+#include "vector_relocate.h"
+
+void delay(unsigned int time)
+{ 
+    unsigned int i,j; 
+    for(i=0;i<time;i++)
+    {
+        for(j=0;j<710;j++);
+    }
+}
+
+void main(void)
+{
+    unsigned int i; 
+    unsigned char val=0;
+    INTCON2bits.RBPU = 0;       // Enable PORTB pull-ups
+    ADCON1=0x0F;                // Configure all PORTA and PORTE pins as digital I/O
+    TRISD = 0x00;               // PORTD as output (LEDs)
+    TRISBbits.TRISB0=1;         // RB0 as input (Switch 0)
+    TRISBbits.TRISB1=1;         // RB1 as input (Switch 1)
+    
+    while(1)
+    {
+        if(PORTBbits.RB1==0)    // Switch 1 pressed
+        {
+            val=1;
+        }
+        if(PORTBbits.RB0==0)    // Switch 0 pressed
+        {
+            val=2;
+        }
+
+        if(val==1)              // LED chase right to left
+        {
+            PORTD = 0x80;
+            delay(100); 
+            for(i=0;i<8;i++)
+            {
+                PORTD = PORTD >> 1;
+                delay(100);
+            }
+        }
+
+        if(val==2)              // LED chase left to right
+        {
+            PORTD = 0x01;
+            delay(100); 
+            for(i=0;i<8;i++)
+            {
+                PORTD = PORTD << 1;
+                delay(100);
+            }
+        }
+    }
+}

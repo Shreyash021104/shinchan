@@ -1,0 +1,76 @@
+1)	Write a program in C language
+a)	Write a program in C language to toggle all the LED’s interfaced to port P2 of 8051 / 89C51 continuously with delay of 100 ms. Use looping for delay. 
+
+       #include<reg51.h>
+void msdelay(unsigned int);
+void main(void)
+{
+ while(1)
+ {
+   P2 = 0XFF;
+   msdelay(100);
+   P2 = 0X00;
+   msdelay(100);
+ }
+}
+void msdelay(unsigned int itime)
+{
+ unsigned int i,j;
+ for(i=0;i<itime;i++)
+ {
+  for(j=0;j<1275;j++)
+  { }
+ }
+}
+
+
+b)	Write a program in C language for up/down counting of hex numbers up to two digits. Display the result on LEDs connected to PORT2. 
+A] UP hex counter
+#include<reg51.h>
+void msdelay(unsigned int);
+void main(void)
+{
+ unsigned int z;
+ while(1)
+ {	 
+  for(z=0;z<=255;z++)
+  {
+   P2=z;
+   msdelay(500);
+  }
+ }
+}
+void msdelay(unsigned int itime)
+{
+ unsigned int i,j;
+ for(i=0;i<itime;i++)
+ {
+  for(j=0;j<1275;j++)
+  { }
+ }
+}
+
+       B] DOWN hex counter
+ #include<reg51.h>
+void msdelay(unsigned int);
+void main(void)
+{
+ unsigned int z;
+ while(1)
+ {	 
+  for(z=255;z>=0;z--)
+  {
+   P2=z;
+   msdelay(500);
+  }
+ }
+}
+void msdelay(unsigned int itime)
+{
+ unsigned int i,j;
+ for(i=0;i<itime;i++)
+ {
+  for(j=0;j<1275;j++)
+  { }
+ }
+}

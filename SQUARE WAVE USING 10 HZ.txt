@@ -1,0 +1,123 @@
+10HZ 500ms delay
+#include <p18f4550.h>
+extern void _startup(void);
+void timer_isr(void);
+
+#pragma code RESET_INTERRUPT_VECTOR = 0x1000
+void _reset(void)
+{
+    _asm goto _startup _endasm
+}
+#pragma code
+
+void main(void)
+{
+    ADCON1 = 0x0F;                 // All pins digital
+    INTCON2bits.RBPU = 0;          // Enable PORTB pull-ups
+
+    TRISBbits.TRISB0 = 0;          // RB0 as output (Square wave)
+    TRISD = 0x00;                  // LEDs output
+
+    PORTBbits.RB0 = 0;
+    PORTD = 0x00;
+
+    // Timer0 setup
+    T0CON = 0b00000111;            // 16-bit, internal clock, prescaler 1:256
+    TMR0H = 0xD9;                  // Preload for 500 ms
+    TMR0L = 0xBA;
+
+    INTCONbits.TMR0IF = 0;         // Clear Timer0 flag
+    INTCONbits.TMR0IE = 1;         // Enable Timer0 interrupt
+    INTCONbits.GIE = 1;            // Global interrupt enable
+    T0CONbits.TMR0ON = 1;          // Start Timer0
+
+    while(1);                      // Main loop does nothing, interrupt handles toggling
+}
+
+#pragma code HIGH_INTERRUPT_VECTOR = 0x1008
+void high_ISR(void)
+{
+    _asm goto timer_isr _endasm
+}
+#pragma code
+
+#pragma interrupt timer_isr
+void timer_isr(void)
+{
+    TMR0H = 0xD9;                  // Reload for next 500 ms
+    TMR0L = 0xBA;
+
+    PORTBbits.RB0 = ~PORTBbits.RB0; // Toggle square wave
+    PORTD = ~PORTD;                 // Toggle LEDs
+
+    INTCONbits.TMR0IF = 0;          // Clear interrupt flag
+}
+
+
+
+
+100hz and 100ms
+
+#include <p18f4550.h>
+extern void _startup(void);
+void timer_isr(void);
+
+#pragma code RESET_INTERRUPT_VECTOR = 0x1000
+void _reset(void)
+{
+    _asm goto _startup _endasm
+}
+#pragma code
+
+void main(void)
+{
+    ADCON1 = 0x0F;                 // All pins digital
+    INTCON2bits.RBPU = 0;          // Enable PORTB pull-ups
+
+    TRISBbits.TRISB0 = 0;          // RB0 as output (Square wave)
+    TRISD = 0x00;                  // PORTD as LED output
+
+    PORTBbits.RB0 = 0;
+    PORTD = 0x00;
+
+    // Timer0 setup
+    T0CON = 0b00000010;            // 16-bit, internal clock, prescaler 1:8
+    TMR0H = 0xF3;                  // Preload for 5 ms interrupt
+    TMR0L = 0xEB;
+
+    INTCONbits.TMR0IF = 0;         // Clear Timer0 flag
+    INTCONbits.TMR0IE = 1;         // Enable Timer0 interrupt
+    INTCONbits.GIE = 1;            // Enable global interrupts
+    T0CONbits.TMR0ON = 1;          // Start Timer0
+
+    while(1);                      // Do nothing, ISR handles toggling
+}
+
+#pragma code HIGH_INTERRUPT_VECTOR = 0x1008
+void high_ISR(void)
+{
+    _asm goto timer_isr _endasm
+}
+#pragma code
+
+#pragma interrupt timer_isr
+void timer_isr(void)
+{
+    static unsigned int count = 0;
+
+    // Reload for 5 ms delay (for 100 Hz square wave)
+    TMR0H = 0xF3;
+    TMR0L = 0xEB;
+
+    PORTBbits.RB0 = ~PORTBbits.RB0;  // Toggle square wave
+
+    count++;
+    if(count >= 20)                  // 20 × 5 ms = 100 ms
+    {
+        PORTD = ~PORTD;              // Blink LEDs every 100 ms
+        count = 0;
+    }
+
+    INTCONbits.TMR0IF = 0;           // Clear interrupt flag
+}
+

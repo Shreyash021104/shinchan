@@ -1,0 +1,160 @@
+Write an embedded C program to control the speed of DC motor using PWM. Assume the PWM frequency as 4 KHz with duty cycle of 20% and 40%.
+
+Calculation:
+PR2=187
+CCPR1L = 20%  of  187
+                 =  37.4
+Hex value of 37 = 25
+
+CCPR1L = 40%  of  187
+                 =  74.8
+Hex value of 74 = 4A
+
+DC1B1         DC1B0             Decimal value
+     0                    0                               0
+     0                    1                              0.25
+     1                    0                              0.5
+     1                    1                              0.75
+
+
+#include <p18f4550.h>
+#include "vector_relocate.h"
+void myMsDelay(unsigned int time);
+
+void main() {
+    TRISCbits.TRISC2 = 0;
+    TRISD = 0;
+    PR2 = 187;
+    CCP1CON = 0x0C;
+    T2CON = 0x07;
+    PORTDbits.RD5 = 1;
+    PORTDbits.RD6 = 0;
+
+    while (1) {
+        // For 20% Duty cycle
+        CCPR1L = 0x25;
+        CCP1CONbits.DC1B0 = 0;
+        CCP1CONbits.DC1B1 = 1;
+        myMsDelay(3000);
+
+        // For 40% Duty cycle
+        CCPR1L = 0x4A;
+        CCP1CONbits.DC1B0 = 1;
+        CCP1CONbits.DC1B1 = 1;
+        myMsDelay(3000);
+    }
+}
+
+void myMsDelay(unsigned int time) 
+{
+    unsigned int i, j;
+    for (i = 0; i < time; i++)
+    {
+        for (j = 0; j < 710; j++);
+    }
+}
+
+
+
+10)	 Write an embedded C program to control the speed of DC motor using PWM. Assume the PWM frequency as 4 KHz with duty cycle of  60% and 80%.    
+
+Calculation:
+PR2=187
+CCPR1L = 60%  of  187
+                 =  112.2
+Hex value of 112 = 70
+
+CCPR1L = 80%  of  187
+                 =  149.6
+Hex value of 149 = 95
+
+DC1B1         DC1B0             Decimal value
+     0                    0                               0
+     0                    1                              0.25
+     1                    0                              0.5
+     1                    1                              0.75
+
+
+#include <p18f4550.h>
+#include "vector_relocate.h"
+void myMsDelay(unsigned int time);
+
+void main() {
+    TRISCbits.TRISC2 = 0;
+    TRISD = 0;
+    PR2 = 187;
+    CCP1CON = 0x0C;
+    T2CON = 0x07;
+    PORTDbits.RD5 = 1;
+    PORTDbits.RD6 = 0;
+
+    while (1) {
+        // For 60% Duty cycle
+        CCPR1L = 0x70;
+        CCP1CONbits.DC1B0 = 1;
+        CCP1CONbits.DC1B1 = 0;
+        myMsDelay(3000);
+
+        // For 80% Duty cycle
+        CCPR1L = 0x95;
+        CCP1CONbits.DC1B0 = 0;
+        CCP1CONbits.DC1B1 = 1;
+        myMsDelay(3000);
+    }
+}
+
+void myMsDelay(unsigned int time) 
+{
+    unsigned int i, j;
+    for (i = 0; i < time; i++)
+    {
+        for (j = 0; j < 710; j++);
+    }
+}
+
+
+11)	Write an embedded C program to control the speed of DC motor using PWM. Assume the PWM frequency as 4 KHz with duty cycle of 50%.  Motor should rotate in clockwise and anticlockwise direction. 
+
+Calculation:
+PR2=187
+CCPR1L = 50%  of  187
+                 =  93.5
+Hex value of 93 = 5D
+
+DC1B1         DC1B0             Decimal value
+     0                    0                               0
+     0                    1                              0.25
+     1                    0                              0.5
+     1                    1                              0.75
+
+#include <p18f4550.h>
+#include "vector_relocate.h"
+void myMsDelay(unsigned int time);
+
+void main() {
+    TRISCbits.TRISC2 = 0;
+    TRISD = 0;
+    PR2 = 187;
+    CCP1CON = 0x0C;
+    T2CON = 0x07;
+    PORTDbits.RD5 = 1;
+    PORTDbits.RD6 = 0;
+
+    while (1) 
+    {
+        // For 50% Duty cycle
+        CCPR1L = 0x5D;
+        CCP1CONbits.DC1B0 = 0;
+        CCP1CONbits.DC1B1 = 1;
+        myMsDelay(3000);
+    }
+}
+
+void myMsDelay(unsigned int time) 
+{
+    unsigned int i, j;
+    for (i = 0; i < time; i++)
+    {
+        for (j = 0; j < 710; j++);
+    }
+}

@@ -1,0 +1,85 @@
+a)	Write a program in C language for up / down counting of BCD numbers up to two digits. Display the result on LEDs connected to PORT2.
+A] UP BCD counter
+       #include<reg51.h>
+void msdelay(unsigned int);
+void main(void)
+{
+ unsigned int x,y;
+ while(1)
+ {
+  for(x=0;x<=9;x++)
+  {
+    for(y=0;y<=9;y++)
+    { 
+      P2=(x<<4)|y;
+      msdelay(500);
+    }
+  }
+ }
+} 
+void msdelay(unsigned int itime)
+{
+ unsigned int i,j;
+ for(i=0;i<itime;i++)
+ {
+  for(j=0;j<1275;j++)
+  {}
+ }
+}
+
+
+B] DOWN BCD counter
+#include<reg51.h>
+void msdelay(unsigned int);
+void main(void)
+{
+ unsigned int x,y;
+ while(1)
+ {
+  for(x=9;x>=0;x--)
+  {
+    for(y=9;y>=0;y--)
+    { 
+      P2=(x<<4)|y;
+      msdelay(500);
+    }
+  }
+ }
+} 
+void msdelay(unsigned int itime)
+{
+ unsigned int i,j;
+ for(i=0;i<itime;i++)
+ {
+  for(j=0;j<1275;j++)
+  {}
+ }
+}
+
+
+ASCII
+
+b)	Write a program in C language to display ASCII values from ‘A’ to ‘Z’ on LEDs connected to PORT2.
+       #include<reg51.h>
+void msdelay(unsigned int);
+void main(void)
+{
+ unsigned int z;
+ while(1)
+ {	 
+  for(z='A';z<='Z';z++)
+  {
+   P2=z;
+   msdelay(500);
+  }
+ }
+}
+void msdelay(unsigned int itime)
+{
+ unsigned int i,j;
+ for(i=0;i<itime;i++)
+ {
+  for(j=0;j<1275;j++)
+  {}
+ }
+}
